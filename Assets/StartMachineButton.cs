@@ -13,7 +13,7 @@ public class StartMachineButton : MonoBehaviour
     private ConfigurableJoint _joint;
     public UnityEvent onPressed, onReleased;
     private TurretShootProjectile fireMachine;
-
+    
     private float GetValue()
     {
         var value = Vector3.Distance(_startPos, transform.localPosition) / _joint.linearLimit.limit;
@@ -43,6 +43,7 @@ public class StartMachineButton : MonoBehaviour
 
     private void Pressed()
     {
+        
         _isPressed = true;
         onPressed.Invoke();
         fireMachine.startFiring();

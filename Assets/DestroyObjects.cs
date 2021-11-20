@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class DestroyObjects : MonoBehaviour
 {
-    public GameObject thingToDestroy;
+    [SerializeField]
+    public float destroyTime = 7f;
     void Update()
     {
-        Destroy(thingToDestroy, 3.5f);
+        Destroy(gameObject, destroyTime);
     }
-
 }

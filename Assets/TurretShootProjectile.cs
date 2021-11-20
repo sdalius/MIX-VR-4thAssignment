@@ -5,18 +5,20 @@ using UnityEngine;
 public class TurretShootProjectile : MonoBehaviour
 {
     [SerializeField]
-    public Rigidbody projectile;
+    public Rigidbody[] availableProjectiles;
 
     [SerializeField]
-    public Transform barrelEnd;
+    public Transform tipOfTheTurret;
     [SerializeField]
-    public float fireRate = 10f;
+    public float fireRate = 1f;
     [SerializeField]
     public AudioClip fireSound;
 
     private AudioSource audioSource;
     private bool bIsShooting = false;
     private bool bShotHasFired = true;
+    private Rigidbody projectileInstance;
+    private Rigidbody projectileToLaunch;
 
     void Start()
     {
@@ -31,14 +33,18 @@ public class TurretShootProjectile : MonoBehaviour
 
     IEnumerator startShooting()
     {
-        bShotHasFired = false;
-        Rigidbody projectileInstance;
-
-        projectileInstance = Instantiate(projectile, barrelEnd.position, barrelEnd.rotation); 
-        projectileInstance.AddForce(barrelEnd.up *  50f, ForceMode.Impulse);
-        audioSource.PlayOneShot(fireSound);
-        yield return new WaitForSeconds(fireRate);
-        bShotHasFired = true;
+        if (projectileToLaunch)
+        {
+            bShotHasFired = false;
+            projectileInstance = Instantiate(projectileToLaunch, tipOfTheTurret.position, tipOfTheTurret.rotation); 
+            projectileInstance.AddForce(tipOfTheTurret.up *  50f, ForceMode.Impulse);
+            audioSource.PlayOneShot(fireSound);
+            yield return new WaitForSeconds(fireRate);
+            bShotHasFired = true;
+        }
+        else{
+            bIsShooting = false;
+        }
     }
 
     public void increaseFireRate()
@@ -60,5 +66,14 @@ public class TurretShootProjectile : MonoBehaviour
         if (bIsShooting)
             bIsShooting = false;
         else bIsShooting = true;
+    }
+
+    public void setProjectile(string name){
+        if (name == "bowl01")
+            projectileToLaunch = availableProjectiles[0];
+        else if (name == "plate01")
+            projectileToLaunch = availableProjectiles[1];
+        else if (name == "none")
+            projectileToLaunch = null;
     }
 }
