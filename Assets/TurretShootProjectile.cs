@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TurretShootProjectile : MonoBehaviour
 {
@@ -15,14 +16,23 @@ public class TurretShootProjectile : MonoBehaviour
     public AudioClip fireSound;
 
     private AudioSource audioSource;
+    // bIsShooting stands for if machine is allowed to shoot
     private bool bIsShooting = false;
+    // bShotHasFired - Check if turret has shot the shot
     private bool bShotHasFired = true;
+    // projectileInstance - projectile which is spawned on the shot.
     private Rigidbody projectileInstance;
+    // projectileToLaunch - Projectile which is set from array, and deployed to be ready to be spawned.
     private Rigidbody projectileToLaunch;
+
+    // platesShot - increase the number for shot plates.
+    private TextMeshProUGUI  platesShot;
+    private int numOfPlatesShot = 0;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        platesShot = GameObject.FindGameObjectWithTag("PlatesShot").GetComponent<TextMeshProUGUI>();
     }
     // Update is called once per frame
     void Update()
@@ -39,6 +49,8 @@ public class TurretShootProjectile : MonoBehaviour
             projectileInstance = Instantiate(projectileToLaunch, tipOfTheTurret.position, tipOfTheTurret.rotation); 
             projectileInstance.AddForce(tipOfTheTurret.up *  50f, ForceMode.Impulse);
             audioSource.PlayOneShot(fireSound);
+            numOfPlatesShot++;
+            platesShot.text = "Plates shot: " + numOfPlatesShot;
             yield return new WaitForSeconds(fireRate);
             bShotHasFired = true;
         }
@@ -75,5 +87,18 @@ public class TurretShootProjectile : MonoBehaviour
             projectileToLaunch = availableProjectiles[1];
         else if (name == "none")
             projectileToLaunch = null;
+    }
+
+    public void clearNumOfShotPlates()
+    {
+        numOfPlatesShot = 0;
+    }
+
+    public bool getbIsShooting(){
+        return bIsShooting;
+    }
+
+    public void setbIsShooting(bool newbIsShooting){
+        bIsShooting = newbIsShooting;
     }
 }

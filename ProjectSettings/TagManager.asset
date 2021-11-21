@@ -12,6 +12,7 @@ TagManager:
   - ChallengeTextTimer
   - Timer
   - FireRateText
+  - PlatesShot
   layers:
   - Default
   - TransparentFX

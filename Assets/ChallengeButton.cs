@@ -17,6 +17,14 @@ public class ChallengeButton : MonoBehaviour
     private ConfigurableJoint _joint;
     public UnityEvent onPressed, onReleased;
 
+    public TextMeshProUGUI machineSpeedText;
+    public FireRateIncreaseSpeedButton increaseSpeedButton;
+    public FireRateDeacreaseSpeedButton decreaseSpeedButton;
+
+    public TurretShootProjectile machineObject;
+
+    
+
     private float timeLeft{get;set;}
     private float GetValue()
     {
@@ -34,6 +42,10 @@ public class ChallengeButton : MonoBehaviour
         _joint = GetComponent<ConfigurableJoint>();
         challengeText = GameObject.FindGameObjectWithTag("ChallengeTextTimer").GetComponent<TextMeshProUGUI>();
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<TextMeshProUGUI>();
+        machineSpeedText = GameObject.FindGameObjectWithTag("FireRateText").GetComponent<TextMeshProUGUI>();
+        increaseSpeedButton = FindObjectOfType<FireRateIncreaseSpeedButton>();
+        decreaseSpeedButton = FindObjectOfType<FireRateDeacreaseSpeedButton>();
+        machineObject = FindObjectOfType<TurretShootProjectile>();
         timeLeft = challengeTime;
     }
 
@@ -50,12 +62,13 @@ public class ChallengeButton : MonoBehaviour
         {
             if (timeLeft > 0)
             {
-                timeLeft -= Time.deltaTime * 4;
+                timeLeft -= Time.deltaTime;
 
                 string minutesLeft = Mathf.FloorToInt(timeLeft / 60).ToString();
                 string seconds = (timeLeft % 60).ToString("F0");
                 seconds = seconds.Length == 1 ? seconds = "0" + seconds : seconds;
                 timer.text = minutesLeft + ":" + seconds;
+                //increaseFireSpeedDuringChallenge();
             }
             else{
                 stopChallenge();
@@ -65,6 +78,7 @@ public class ChallengeButton : MonoBehaviour
 
     private void Pressed()
     {
+        _isPressed = true;
         onPressed.Invoke();
         Debug.Log("Pressed");
         if(bChallengeStarted)
@@ -82,6 +96,9 @@ public class ChallengeButton : MonoBehaviour
 
     private IEnumerator challengeBegin()
     {
+        if (machineObject.getbIsShooting())
+            machineObject.setbIsShooting(false);
+        machineObject.fireRate = 2f;
         challengeText.text = "Prepare for 1 min challenge!";
         yield return new WaitForSeconds(2);
         challengeText.text = "Challenge will start in 5";
@@ -95,14 +112,33 @@ public class ChallengeButton : MonoBehaviour
         challengeText.text = "Challenge will start in 1";
         yield return new WaitForSeconds(1);
         challengeText.text = "GO!";
-        timer.enabled = true;
+        startChallengeAttributes();
+        InvokeRepeating("decreaseFireRate",10, 10);
+    }
+
+    private void decreaseFireRate(){
+            Debug.Log("Decreasing fireRate");
+            machineObject.decreaseFireRate();
+    }
+
+    private void startChallengeAttributes(){
         bChallengeStarted = true;
-        // Make a function to start the machine
+        timer.enabled = true;
+        machineSpeedText.enabled = false;
+        increaseSpeedButton.enabled = false;
+        decreaseSpeedButton.enabled = false;
+        machineObject.setbIsShooting(true);
     }
     private void stopChallenge(){
         bChallengeStarted=false;
         challengeText.enabled = false;
         timer.enabled =false;
+        machineSpeedText.enabled = true;
+        increaseSpeedButton.enabled = true;
+        decreaseSpeedButton.enabled = true;
+        machineObject.fireRate = 1f;
         timeLeft = challengeTime;
+        machineObject.setbIsShooting(false);
+        CancelInvoke("decreaseFireRate");
     }
 }
