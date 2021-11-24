@@ -8,13 +8,19 @@ public class LeaderBoard : MonoBehaviour
     // Start is called before the first frame update
     private TextMeshProUGUI  playersLeaderBoard;
     private TextMeshProUGUI  playersLeaderBoardNumbers;
+    private TextMeshProUGUI  yourName;
     private List<(string, int)> generatedScores = new List<(string, int)>();
+
+    private int playerNumber = 0;
 
     void Start()
     {
         playersLeaderBoard = GameObject.FindGameObjectWithTag("PlayersScore").GetComponent<TextMeshProUGUI>();
         playersLeaderBoardNumbers = GameObject.FindGameObjectWithTag("ScoreNumbers").GetComponent<TextMeshProUGUI>();
+        yourName = GameObject.FindGameObjectWithTag("YourName").GetComponent<TextMeshProUGUI>();
         fillRandomPlayers();
+        if (yourName)
+            yourName.text = "Your name: " + generateName(true);
     }
 
     private void fillRandomPlayers()
@@ -35,7 +41,7 @@ public class LeaderBoard : MonoBehaviour
         }
     }
 
-    private void insertPlayersScore(string playerName, int score)
+    public void insertPlayersScore(string playerName, int score)
     {
         if (playerName == "" || score < 0)
         {
@@ -60,6 +66,21 @@ public class LeaderBoard : MonoBehaviour
     {
         playersLeaderBoard.text = string.Empty;
         playersLeaderBoardNumbers.text = string.Empty;
+    }
+
+    public string generateName(bool generateNewOne){
+        Debug.Log("Generating Name");
+        if (generateNewOne)
+        {  
+            playerNumber++;
+            yourName.text = "Your name: Player " + playerNumber;
+            return "Player " + playerNumber;
+        }
+        else{
+            yourName.text = "Your name: Player " + playerNumber;
+            return "Player " + playerNumber;
+        }
+
     }
     
     class ScoreComparer : IComparer<(string, int)> 

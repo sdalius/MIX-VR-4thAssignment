@@ -4,7 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/Dalius.unity
+    guid: b503a77165e7538479aab689a0033c22
+  - enabled: 1
+    path: Assets/Scenes/Level 0.unity
+    guid: 43f87880112acb64ba36862368474f5a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 8b1d0ee034703c741ade26bef7e624dd, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 48be954bed688e343a31c1f6260b24a6, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 1904bb5f044f9ad44bc7d2025a57da5c, type: 2}

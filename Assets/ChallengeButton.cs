@@ -17,11 +17,15 @@ public class ChallengeButton : MonoBehaviour
     private ConfigurableJoint _joint;
     public UnityEvent onPressed, onReleased;
 
-    public TextMeshProUGUI machineSpeedText;
-    public FireRateIncreaseSpeedButton increaseSpeedButton;
-    public FireRateDeacreaseSpeedButton decreaseSpeedButton;
+    private TextMeshProUGUI machineSpeedText;
+    private FireRateIncreaseSpeedButton increaseSpeedButton;
+    private FireRateDeacreaseSpeedButton decreaseSpeedButton;
 
-    public TurretShootProjectile machineObject;
+    private TurretShootProjectile machineObject;
+
+    private SimpleShoot gunObject;
+
+    private LeaderBoard leaderBoard;
 
     
 
@@ -46,6 +50,8 @@ public class ChallengeButton : MonoBehaviour
         increaseSpeedButton = FindObjectOfType<FireRateIncreaseSpeedButton>();
         decreaseSpeedButton = FindObjectOfType<FireRateDeacreaseSpeedButton>();
         machineObject = FindObjectOfType<TurretShootProjectile>();
+        gunObject = FindObjectOfType<SimpleShoot>();
+        leaderBoard = FindObjectOfType<LeaderBoard>();
         timeLeft = challengeTime;
     }
 
@@ -68,7 +74,6 @@ public class ChallengeButton : MonoBehaviour
                 string seconds = (timeLeft % 60).ToString("F0");
                 seconds = seconds.Length == 1 ? seconds = "0" + seconds : seconds;
                 timer.text = minutesLeft + ":" + seconds;
-                //increaseFireSpeedDuringChallenge();
             }
             else{
                 stopChallenge();
@@ -98,6 +103,12 @@ public class ChallengeButton : MonoBehaviour
     {
         if (machineObject.getbIsShooting())
             machineObject.setbIsShooting(false);
+        if (machineObject.getbProjectileToLaunch() == null)
+        {
+            challengeText.text = "Please put an item on the Item area!";
+            yield break;
+        }
+        else
         machineObject.fireRate = 2f;
         challengeText.text = "Prepare for 1 min challenge!";
         yield return new WaitForSeconds(2);
@@ -122,6 +133,8 @@ public class ChallengeButton : MonoBehaviour
     }
 
     private void startChallengeAttributes(){
+        gunObject.resetNumberOfShotObjects();
+        machineObject.clearNumOfShotPlates();
         bChallengeStarted = true;
         timer.enabled = true;
         machineSpeedText.enabled = false;
@@ -130,6 +143,9 @@ public class ChallengeButton : MonoBehaviour
         machineObject.setbIsShooting(true);
     }
     private void stopChallenge(){
+        leaderBoard.insertPlayersScore(leaderBoard.generateName(false), gunObject.NumberofShotObjects());
+        gunObject.resetNumberOfShotObjects();
+        machineObject.clearNumOfShotPlates();
         bChallengeStarted=false;
         challengeText.enabled = false;
         timer.enabled =false;
@@ -140,5 +156,6 @@ public class ChallengeButton : MonoBehaviour
         timeLeft = challengeTime;
         machineObject.setbIsShooting(false);
         CancelInvoke("decreaseFireRate");
+        leaderBoard.generateName(true);
     }
 }

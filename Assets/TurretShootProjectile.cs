@@ -29,6 +29,9 @@ public class TurretShootProjectile : MonoBehaviour
     private TextMeshProUGUI  platesShot;
     private int numOfPlatesShot = 0;
 
+    [SerializeField] 
+    public float shotPower = 50;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -47,10 +50,10 @@ public class TurretShootProjectile : MonoBehaviour
         {
             bShotHasFired = false;
             projectileInstance = Instantiate(projectileToLaunch, tipOfTheTurret.position, tipOfTheTurret.rotation); 
-            projectileInstance.AddForce(tipOfTheTurret.up *  50f, ForceMode.Impulse);
+            projectileInstance.AddForce(tipOfTheTurret.up *  shotPower, ForceMode.Impulse);
             audioSource.PlayOneShot(fireSound);
             numOfPlatesShot++;
-            platesShot.text = "Plates shot: " + numOfPlatesShot;
+            platesShot.text = "Launched plates: " + numOfPlatesShot;
             yield return new WaitForSeconds(fireRate);
             bShotHasFired = true;
         }
@@ -92,6 +95,7 @@ public class TurretShootProjectile : MonoBehaviour
     public void clearNumOfShotPlates()
     {
         numOfPlatesShot = 0;
+        platesShot.text = "Launched plates: " + numOfPlatesShot;
     }
 
     public bool getbIsShooting(){
@@ -100,5 +104,9 @@ public class TurretShootProjectile : MonoBehaviour
 
     public void setbIsShooting(bool newbIsShooting){
         bIsShooting = newbIsShooting;
+    }
+
+    public Rigidbody getbProjectileToLaunch(){
+        return projectileToLaunch;
     }
 }

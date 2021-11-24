@@ -13,6 +13,8 @@ TagManager:
   - Timer
   - FireRateText
   - PlatesShot
+  - ShotObjects
+  - YourName
   layers:
   - Default
   - TransparentFX
@@ -20,9 +22,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Grab
+  - Ground
+  - Body
   - 
   - 
   - 
